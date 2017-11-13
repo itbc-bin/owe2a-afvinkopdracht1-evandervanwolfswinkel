@@ -1,0 +1,62 @@
+def main():
+    try:
+        bestand = "alpaca.txt"
+        headers, seqs, seq = lees_inhoud(bestand)
+        zoekwoord = input("Geef een zoekwoord op: ")
+        print(40 * "-")
+        for head in headers:
+            if zoekwoord in head:
+                seq_al = seqs[headers.index(head)]
+                print("Match:", head)
+                print(seq_al)
+                print(40 * "-")
+                is_dna(seq)
+                print(40 * "-")
+                knipt(seqs)
+    except:
+        print("Error: File "alpaca.txt" not found.")
+
+
+def lees_inhoud(bestand):
+    global seq
+    bestand = open(bestand)
+    headers = []
+    seqs = []
+    seq = ""
+    for line in bestand:
+        line = line.rstrip()
+        if ">" in line:
+            headers.append(line)
+            if len(seq) > 0:
+                seqs.append(seq)
+                seq = ""
+        else:
+            seq += line
+    seqs.append(seq)
+
+    return headers, seqs, seq
+
+
+def is_dna(seq):
+    goed_dna = 'ACGT'
+    condition = all(i in goed_dna for i in seq)
+    print('Valid DNA sequence') if condition else print('Invalid DNA sequence')
+
+
+def knipt(seqs):
+    enzymen = open("enzymen.txt")
+    enzymlijst = []
+    for line in enzymen:
+        combi = line.split()
+        enzymlijst.append(combi)
+    for sequentie in enzymlijst:
+        sequentie[1] = sequentie[1].replace('^', '')
+
+    for sequentie in enzymlijst:
+        if sequentie[1] in seq:
+            match = print('Match sequence:', sequentie[0], sequentie[1])
+        else:
+            print("No match with:", sequentie[0], sequentie[1])
+
+
+main()
